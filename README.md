@@ -1,0 +1,1 @@
+Photo_Watermark_1模块：是一个命令行程序，为图片添加水印，生成的文件夹放在resource目录下，文件名为原文件名＋watermark后缀

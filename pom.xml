@@ -10,6 +10,7 @@
     <packaging>pom</packaging>
     <modules>
         <module>Photo_Watermark_1</module>
+        <module>Photo_Watermark_2</module>
     </modules>
 
     <properties>

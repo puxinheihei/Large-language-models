@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.puxinheihei.controller.TemplateController" spacing="15" style="-fx-padding: 20;">
+
+    <Label text="水印模板管理" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+
+    <HBox spacing="10" alignment="CENTER_LEFT">
+        <Label text="模板名称:"/>
+        <TextField fx:id="templateNameField" promptText="输入模板名称" prefWidth="200"/>
+        <Button text="保存当前设置" onAction="#handleSaveTemplate" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+    </HBox>
+
+    <Separator/>
+
+    <Label text="已保存的模板:" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+
+    <TableView fx:id="templatesTableView" VBox.vgrow="ALWAYS">
+        <columns>
+            <TableColumn text="模板名称" prefWidth="200">
+                <cellValueFactory>
+                    <PropertyValueFactory property="name" />
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn text="类型" prefWidth="100">
+                <cellValueFactory>
+                    <PropertyValueFactory property="config.type" />
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn text="创建时间" prefWidth="150">
+                <cellValueFactory>
+                    <PropertyValueFactory property="createTime" />
+                </cellValueFactory>
+            </TableColumn>
+            <TableColumn text="更新时间" prefWidth="150">
+                <cellValueFactory>
+                    <PropertyValueFactory property="updateTime" />
+                </cellValueFactory>
+            </TableColumn>
+        </columns>
+    </TableView>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="加载选中模板" onAction="#handleLoadTemplate" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+        <Button text="删除选中模板" onAction="#handleDeleteTemplate" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+        <Button text="关闭" onAction="#handleClose"/>
+    </HBox>
+</VBox>

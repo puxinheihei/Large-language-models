@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.puxinheihei.controller.MainController" spacing="10" style="-fx-padding: 15;">
+
+    <MenuBar>
+        <Menu text="文件">
+            <MenuItem text="导入图片" onAction="#handleImportImages"/>
+            <MenuItem text="导入文件夹" onAction="#handleImportFolder"/>
+            <SeparatorMenuItem/>
+            <MenuItem text="导出图片" onAction="#handleExportImages"/>
+            <SeparatorMenuItem/>
+            <MenuItem text="退出" onAction="#handleExit"/>
+        </Menu>
+        <Menu text="水印">
+            <MenuItem text="文本水印" onAction="#handleTextWatermark"/>
+        </Menu>
+        <Menu text="模板">
+            <MenuItem text="保存模板" onAction="#handleSaveTemplate"/>
+            <MenuItem text="加载模板" onAction="#handleLoadTemplate"/>
+            <MenuItem text="管理模板" onAction="#handleManageTemplates"/>
+        </Menu>
+    </MenuBar>
+
+    <SplitPane dividerPositions="0.7" VBox.vgrow="ALWAYS">
+
+        <!-- 右侧：图片预览区域 -->
+        <VBox spacing="10" style="-fx-padding: 10;">
+            <Label text="图片预览" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+            <BorderPane fx:id="previewPane" style="-fx-border-color: #ccc; -fx-border-width: 1; -fx-background-color: white;">
+                <center>
+                    <Label text="请导入图片进行预览" fx:id="previewPlaceholder"/>
+                </center>
+            </BorderPane>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="输出格式:"/>
+                <ComboBox fx:id="outputFormatComboBox" prefWidth="100"/>
+                <Label text="文件名:"/>
+                <TextField fx:id="prefixField" promptText="前缀" prefWidth="80"/>
+                <TextField fx:id="suffixField" promptText="后缀" prefWidth="80" text="_watermarked"/>
+                <Button text="应用水印" onAction="#handleApplyWatermark" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+                <Button text="导出全部" onAction="#handleExportAll" style="-fx-background-color: #2196F3; -fx-text-fill: white;"/>
+            </HBox>
+        </VBox>
+
+        <!-- 左侧：图片列表区域 -->
+        <VBox spacing="10" style="-fx-padding: 10;" prefWidth="300">
+            <Label text="图片列表" style="-fx-font-size: 14; -fx-font-weight: bold;"/>
+            <ScrollPane fitToWidth="true" VBox.vgrow="ALWAYS">
+                <VBox fx:id="imageListContainer" spacing="5"/>
+            </ScrollPane>
+
+            <HBox spacing="10" alignment="CENTER">
+                <Button text="清空列表" onAction="#handleClearList" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+                <Label fx:id="imageCountLabel" text="共 0 张图片"/>
+            </HBox>
+        </VBox>
+
+    </SplitPane>
+
+    <!-- 使用HBox模拟状态栏 -->
+    <HBox style="-fx-background-color: #f0f0f0; -fx-border-color: #ccc; -fx-border-width: 1 0 0 0; -fx-padding: 5;">
+        <Label fx:id="statusLabel" text="就绪"/>
+    </HBox>
+</VBox>

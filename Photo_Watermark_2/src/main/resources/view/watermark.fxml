@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="com.puxinheihei.controller.WatermarkController" spacing="15" style="-fx-padding: 20;">
+
+    <Label text="水印设置" style="-fx-font-size: 18; -fx-font-weight: bold;"/>
+
+    <!-- 文本水印设置 -->
+    <TitledPane text="文本设置" expanded="true">
+        <VBox spacing="10" style="-fx-padding: 10;">
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="文本内容:"/>
+                <TextField fx:id="watermarkText" text="Watermark" prefWidth="200"/>
+            </HBox>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="字体:"/>
+                <ComboBox fx:id="fontFamilyComboBox" prefWidth="120"/>
+                <Label text="大小:"/>
+                <Spinner fx:id="fontSizeSpinner" prefWidth="80" editable="true"/>
+                <ColorPicker fx:id="textColorPicker"/>
+            </HBox>
+
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="透明度:"/>
+                <Slider fx:id="textOpacitySlider" min="0" max="1" value="0.7" prefWidth="150" showTickLabels="true" showTickMarks="true"/>
+                <Label fx:id="textOpacityLabel" text="70%"/>
+            </HBox>
+        </VBox>
+    </TitledPane>
+
+    <!-- 位置设置 -->
+    <TitledPane text="位置设置" expanded="true">
+        <VBox spacing="10" style="-fx-padding: 10;">
+            <Label text="预设位置:"/>
+            <GridPane hgap="5" vgap="5">
+                <Button text="左上" onAction="#handlePositionTopLeft" GridPane.columnIndex="0" GridPane.rowIndex="0" prefWidth="60"/>
+                <Button text="中上" onAction="#handlePositionTopCenter" GridPane.columnIndex="1" GridPane.rowIndex="0" prefWidth="60"/>
+                <Button text="右上" onAction="#handlePositionTopRight" GridPane.columnIndex="2" GridPane.rowIndex="0" prefWidth="60"/>
+                <Button text="左中" onAction="#handlePositionMiddleLeft" GridPane.columnIndex="0" GridPane.rowIndex="1" prefWidth="60"/>
+                <Button text="居中" onAction="#handlePositionMiddleCenter" GridPane.columnIndex="1" GridPane.rowIndex="1" prefWidth="60"/>
+                <Button text="右中" onAction="#handlePositionMiddleRight" GridPane.columnIndex="2" GridPane.rowIndex="1" prefWidth="60"/>
+                <Button text="左下" onAction="#handlePositionBottomLeft" GridPane.columnIndex="0" GridPane.rowIndex="2" prefWidth="60"/>
+                <Button text="中下" onAction="#handlePositionBottomCenter" GridPane.columnIndex="1" GridPane.rowIndex="2" prefWidth="60"/>
+                <Button text="右下" onAction="#handlePositionBottomRight" GridPane.columnIndex="2" GridPane.rowIndex="2" prefWidth="60"/>
+            </GridPane>
+
+            <Label text="自定义位置 (拖拽预览图调整)"/>
+            <HBox spacing="10" alignment="CENTER_LEFT">
+                <Label text="X:"/>
+                <TextField fx:id="positionXField" prefWidth="60" editable="false"/>
+                <Label text="Y:"/>
+                <TextField fx:id="positionYField" prefWidth="60" editable="false"/>
+                <Button text="重置位置" onAction="#handleResetPosition"/>
+            </HBox>
+        </VBox>
+    </TitledPane>
+
+    <HBox spacing="10" alignment="CENTER_RIGHT">
+        <Button text="取消" onAction="#handleCancel" style="-fx-background-color: #f44336; -fx-text-fill: white;"/>
+        <Button text="应用" onAction="#handleApply" style="-fx-background-color: #4CAF50; -fx-text-fill: white;"/>
+    </HBox>
+</VBox>

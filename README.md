@@ -1,4 +1,4 @@
 Photo_Watermark_1模块：是一个命令行程序，为图片添加水印，生成的文件夹放在resource目录下，文件名为原文件名＋watermark后缀
 
 Photo_Watermark_2模块：水印文件本地应用，命令行：Photo_Watermark_2>mvn clean compile javafx:run启动项目
-或者下载exe文件超过了100MB(Launch4j生成)运行
+或者下载Photo_Watermark_2\Photo_WaterMark_App.exe文件(超过了100MB)(Launch4j生成)运行

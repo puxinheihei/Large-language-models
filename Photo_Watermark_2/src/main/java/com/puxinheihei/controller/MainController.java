@@ -422,18 +422,34 @@ public class MainController implements Initializable {
      * 设置拖拽处理
      */
     private void setupDragHandling() {
+        final double[] startX = new double[1];
+        final double[] startY = new double[1];
+        final boolean[] isDragging = new boolean[1];
+
         previewImageView.setOnMousePressed(event -> {
             if (event.isPrimaryButtonDown()) {
-                // 开始拖拽
-                double mouseX = event.getX();
-                double mouseY = event.getY();
+                // 记录开始拖拽的位置
+                startX[0] = event.getX();
+                startY[0] = event.getY();
+                isDragging[0] = true;
+
+                // 设置鼠标样式为移动
+                previewImageView.setCursor(javafx.scene.Cursor.MOVE);
+            }
+        });
+
+        previewImageView.setOnMouseDragged(event -> {
+            if (isDragging[0]) {
+                // 计算拖拽距离
+                double dragX = event.getX();
+                double dragY = event.getY();
 
                 // 计算相对于原图的位置
                 double scaleX = previewImageView.getImage().getWidth() / previewImageView.getFitWidth();
                 double scaleY = previewImageView.getImage().getHeight() / previewImageView.getFitHeight();
 
-                int imageX = (int) (mouseX * scaleX);
-                int imageY = (int) (mouseY * scaleY);
+                int imageX = (int) (dragX * scaleX);
+                int imageY = (int) (dragY * scaleY);
 
                 // 设置自定义位置
                 currentConfig.setPosition(WatermarkConfig.Position.CUSTOM);
@@ -447,12 +463,38 @@ public class MainController implements Initializable {
                     }
                 });
 
-                System.out.println("设置水印位置: " + imageX + ", " + imageY);
+                // 实时应用水印（提供视觉反馈）
+                applyWatermarkInRealTime();
 
-                // 立即应用水印
-                handleApplyWatermark();
+                System.out.println("拖拽水印位置: " + imageX + ", " + imageY);
             }
         });
+
+        previewImageView.setOnMouseReleased(event -> {
+            if (isDragging[0]) {
+                isDragging[0] = false;
+                previewImageView.setCursor(javafx.scene.Cursor.DEFAULT);
+                System.out.println("拖拽结束");
+            }
+        });
+    }
+
+    /**
+     * 实时应用水印（用于拖拽时的视觉反馈）
+     */
+    private void applyWatermarkInRealTime() {
+        if (selectedImage == null) return;
+
+        try {
+            // 应用水印到预览图
+            Image watermarkedImage = watermarkService.applyWatermarkToPreview(selectedImage, currentConfig);
+            if (watermarkedImage != null) {
+                previewImageView.setImage(watermarkedImage);
+                previewPane.setCenter(previewImageView);
+            }
+        } catch (Exception e) {
+            log.error("实时应用水印失败", e);
+        }
     }
 
     /**

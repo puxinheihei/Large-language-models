@@ -23,6 +23,8 @@ public class TemplateController implements Initializable {
     private boolean forLoading = false;
     private Stage stage;
 
+
+
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         try {
@@ -30,10 +32,14 @@ public class TemplateController implements Initializable {
             setupTableView();
             refreshTemplates();
 
-            // 设置舞台引用
+            // 修复stage引用问题
             templateNameField.sceneProperty().addListener((obs, oldScene, newScene) -> {
                 if (newScene != null) {
                     stage = (Stage) newScene.getWindow();
+                    // 如果forLoading已设置，现在可以安全设置标题
+                    if (forLoading) {
+                        stage.setTitle("加载模板");
+                    }
                 }
             });
 
@@ -48,8 +54,8 @@ public class TemplateController implements Initializable {
 
     public void setForLoading(boolean forLoading) {
         this.forLoading = forLoading;
-        if (forLoading) {
-            // 如果是用于加载模板，可以调整界面
+        // 只有当stage不为null时才设置标题
+        if (stage != null && forLoading) {
             stage.setTitle("加载模板");
         }
     }

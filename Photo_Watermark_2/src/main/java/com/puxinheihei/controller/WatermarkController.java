@@ -1,16 +1,13 @@
 package com.puxinheihei.controller;
 
+import com.puxinheihei.entity.ImageFile;
 import com.puxinheihei.entity.WatermarkConfig;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
-import javafx.scene.control.Label;
-import javafx.scene.control.TextField;
-import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import lombok.extern.slf4j.Slf4j;
 
-import java.awt.*;
 import java.net.URL;
 import java.util.ResourceBundle;
 
@@ -249,7 +246,17 @@ public class WatermarkController implements Initializable {
     private void handleApply() {
         saveUIToConfig();
         if (mainController != null) {
+            // 修复变量名冲突 - 使用不同的变量名
+            ImageFile currentSelectedImage = mainController.getSelectedImage();
+            if (currentSelectedImage != null) {
+                // 将配置保存到当前选中的图片
+                currentSelectedImage.setWatermarkConfig(watermarkConfig);
+            }
+            // 更新主控制器的配置
             mainController.updateWatermarkConfig(watermarkConfig);
+
+            // 手动触发水印应用
+            mainController.handleApplyWatermark();
         }
         closeDialog();
     }

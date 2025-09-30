@@ -156,14 +156,23 @@ public class MainController implements Initializable {
                 String prefix = prefixField.getText();
                 String suffix = suffixField.getText();
 
-                int successCount = watermarkService.exportImages(
-                        imageService.getImageFiles(),
-                        outputDir,
-                        currentConfig,
-                        outputFormat,
-                        prefix,
-                        suffix
-                );
+                int successCount = 0;
+                List<ImageFile> imageFiles = imageService.getImageFiles();
+
+                // 批量导出，每张图片使用自己的水印配置
+                for (ImageFile imageFile : imageFiles) {
+                    boolean success = watermarkService.exportSingleImage(
+                            imageFile,
+                            outputDir,
+                            imageFile.getWatermarkConfig(), // 使用图片自己的配置
+                            outputFormat,
+                            prefix,
+                            suffix
+                    );
+                    if (success) {
+                        successCount++;
+                    }
+                }
 
                 updateStatus("成功导出 " + successCount + " 张图片到 " + outputDir.getAbsolutePath());
                 showInfo("导出完成", "成功导出 " + successCount + " 张图片");
@@ -179,8 +188,10 @@ public class MainController implements Initializable {
         handleExportImages();
     }
 
-    @FXML
-    private void handleApplyWatermark() {
+    /**
+     * 应用水印方法（供其他控制器调用）
+     */
+    public void handleApplyWatermark() {
         if (selectedImage == null) {
             showWarning("请先选择一张图片");
             return;
@@ -193,6 +204,10 @@ public class MainController implements Initializable {
                 previewImageView.setImage(watermarkedImage);
                 previewPane.setCenter(previewImageView);
                 adjustPreviewSize();
+
+                // 保存当前配置到图片
+                selectedImage.setWatermarkConfig(currentConfig);
+
                 updateStatus("水印应用成功");
             }
         } catch (Exception e) {
@@ -365,6 +380,9 @@ public class MainController implements Initializable {
         item.getStyleClass().add("selected");
         selectedImage = imageFile;
 
+        // 切换到当前图片的水印配置
+        currentConfig = imageFile.getWatermarkConfig();
+
         // 显示预览
         showImagePreview(imageFile);
         updateStatus("已选择: " + imageFile.getFileName());
@@ -384,10 +402,10 @@ public class MainController implements Initializable {
             String imagePath = "file:" + imageFile.getFilePath();
             System.out.println("加载图片路径: " + imagePath);
 
-            Image image = new Image(imagePath);
+            Image originalImage = new Image(imagePath);
 
-            if (image.isError()) {
-                Throwable exception = image.getException();
+            if (originalImage.isError()) {
+                Throwable exception = originalImage.getException();
                 if (exception != null) {
                     log.error("图片加载错误: {}", exception.getMessage());
                     showError("图片加载错误: " + exception.getMessage());
@@ -399,8 +417,15 @@ public class MainController implements Initializable {
                 return;
             }
 
-            // 设置图片到ImageView
-            previewImageView.setImage(image);
+            // 应用水印到预览图
+            Image watermarkedImage = watermarkService.applyWatermarkToPreview(imageFile, imageFile.getWatermarkConfig());
+            if (watermarkedImage != null) {
+                previewImageView.setImage(watermarkedImage);
+            } else {
+                // 如果水印应用失败，显示原图
+                previewImageView.setImage(originalImage);
+            }
+
             previewPane.setCenter(previewImageView);
 
             // 添加鼠标拖拽事件
@@ -599,21 +624,42 @@ public class MainController implements Initializable {
         return (Stage) previewPane.getScene().getWindow();
     }
 
-    // 供其他控制器调用的方法
+    /**
+     * 供其他控制器调用的方法 - 更新水印配置
+     */
     public void updateWatermarkConfig(WatermarkConfig config) {
         this.currentConfig = config;
-        ConfigManager.saveLastConfig(config);
-
+        // 同时更新到当前选中的图片
         if (selectedImage != null) {
-            handleApplyWatermark();
+            selectedImage.setWatermarkConfig(config);
         }
+        System.out.println("水印配置已更新");
     }
 
+    /**
+     * 获取当前选中的图片
+     */
+    public ImageFile getSelectedImage() {
+        return selectedImage;
+    }
+
+    /**
+     * 获取当前水印配置
+     */
     public WatermarkConfig getCurrentConfig() {
         return currentConfig;
+    }
+
+    /**
+     * 设置当前水印配置
+     */
+    public void setCurrentConfig(WatermarkConfig config) {
+        this.currentConfig = config;
     }
 
     public List<ImageFile> getImageFiles() {
         return imageService.getImageFiles();
     }
+
+
 }

@@ -1,6 +1,7 @@
 package com.puxinheihei.service;
 
 import com.puxinheihei.entity.ImageFile;
+import com.puxinheihei.entity.WatermarkConfig;
 import com.puxinheihei.util.FileUtils;
 import com.puxinheihei.util.ImageUtils;
 import javafx.embed.swing.SwingFXUtils;
@@ -41,24 +42,23 @@ public class ImageService {
                 return false;
             }
 
-            // 加载图片
-            BufferedImage bufferedImage = ImageIO.read(file);
-            if (bufferedImage == null) {
-                log.error("无法读取图片文件: {}", file.getAbsolutePath());
+            // 使用JavaFX直接加载图片创建缩略图
+            Image thumbnail = new Image("file:" + file.getAbsolutePath(), THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, true, true, true);
+            if (thumbnail.isError()) {
+                log.error("无法加载图片文件: {}", file.getAbsolutePath());
                 return false;
             }
-
-            // 创建缩略图
-            BufferedImage thumbnail = ImageUtils.createThumbnail(bufferedImage, THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT);
-            Image fxThumbnail = SwingFXUtils.toFXImage(thumbnail, null);
 
             // 创建ImageFile对象
             ImageFile imageFile = new ImageFile();
             imageFile.setFileName(file.getName());
             imageFile.setFilePath(file.getAbsolutePath());
-            imageFile.setThumbnail(fxThumbnail);
+            imageFile.setThumbnail(thumbnail);
             imageFile.setFileSize(file.length());
             imageFile.setFormat(FileUtils.getFileExtension(file.getName()));
+
+            // 为每个图片初始化默认水印配置
+            imageFile.setWatermarkConfig(new WatermarkConfig());
 
             imageFiles.add(imageFile);
             log.info("成功添加图片: {}", file.getName());

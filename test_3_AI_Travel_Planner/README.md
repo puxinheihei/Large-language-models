@@ -19,6 +19,7 @@
 - 执行：
   - `mvn -DskipTests spring-boot:run`
   - 或（Windows）`mvnw.cmd spring-boot:run`
+  - 或使用IDEA通过(backend下的pom文件)导入backend项目，直接运行src/main/java/com/puxinheihei/backend/BackendApplication.java
 
 ## 前端启动
 - 进入 `frontend` 目录

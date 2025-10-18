@@ -2,3 +2,5 @@ Photo_Watermark_1模块：是一个命令行程序，为图片添加水印，生
 
 Photo_Watermark_2模块：水印文件本地应用，命令行：Photo_Watermark_2>mvn clean compile javafx:run启动项目
 或者下载Photo_Watermark_2\Photo_WaterMark_App.exe文件(超过了100MB)(Launch4j生成)运行
+
+Web 版AI 旅行规划师见test_3_AI_Travel_Planner下的readme.md文件
